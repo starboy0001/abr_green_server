@@ -11,8 +11,6 @@ services:
       - ./storage:/app/storage:ro
     depends_on:
       - api
-    networks:
-      - default
 
   api:
     build:
@@ -26,20 +24,7 @@ services:
       - .env
     environment:
       PORT: 3000
-      DATABASE_URL: ${DATABASE_URL:-postgresql://postgres:postgrespassword@supabase-db:5432/postgres}
-      DB_HOST: ${DB_HOST:-supabase-db}
-      DB_PORT: ${DB_PORT:-5432}
-      DB_USER: ${DB_USER:-postgres}
-      DB_PASSWORD: ${DB_PASSWORD:-postgrespassword}
-      DB_NAME: ${DB_NAME:-postgres}
-      DB_POOL_MAX: 30
-      JWT_SECRET: ${JWT_SECRET:-abr_greens_docker_production_secret_2026}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - ./storage:/app/storage
-    networks:
-      - default
-
-networks:
-  default:
-    name: docker_default
-    external: true
