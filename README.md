@@ -54,23 +54,25 @@ backend/
 
 ---
 
-## 🐳 Option A: 1-Command Full Stack Docker (API + PostgreSQL)
+## 🐳 Option A: Production Docker + Nginx Deployment
 
-If Docker is installed on your server:
+Deploy the TypeScript API behind an **Nginx Reverse Proxy** with a single command:
 
 ```bash
 cd backend
 
-# Build and start both PostgreSQL 16 & the TypeScript Backend API:
+# 1. Start Docker + Nginx:
 docker compose up -d --build
 
-# View real-time logs:
+# 2. View real-time logs:
 docker compose logs -f
 
-# Check container status:
+# 3. Check container status:
 docker compose ps
 ```
-The Docker setup automatically runs `schema.sql`, configures connection pooling, and exposes the REST API on port `3000`.
+
+- **Nginx**: Listens on port `80` (standard HTTP) and port `3000`, handling gzip compression, 50MB file uploads, and caching.
+- **TypeScript API**: Runs internally on port `3000` with connection pooling to PostgreSQL / Supabase (`host.docker.internal:5432`).
 
 ---
 

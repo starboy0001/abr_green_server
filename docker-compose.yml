@@ -1,46 +1,36 @@
 services:
+  nginx:
+    image: nginx:alpine
+    container_name: abr_greens_nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "3000:3000"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./storage:/app/storage:ro
+    depends_on:
+      - api
+
   api:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: abr_greens_api
     restart: always
-    ports:
-      - "3000:3000"
+    expose:
+      - "3000"
     environment:
       PORT: 3000
-      DATABASE_URL: postgresql://postgres:postgrespassword@postgres:5432/abr_greens
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_USER: postgres
-      DB_PASSWORD: postgrespassword
-      DB_NAME: abr_greens
+      DATABASE_URL: ${DATABASE_URL:-postgresql://postgres:postgrespassword@host.docker.internal:5432/postgres}
+      DB_HOST: ${DB_HOST:-host.docker.internal}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgrespassword}
+      DB_NAME: ${DB_NAME:-postgres}
       DB_POOL_MAX: 30
-      JWT_SECRET: abr_greens_docker_production_secret_2026
+      JWT_SECRET: ${JWT_SECRET:-abr_greens_docker_production_secret_2026}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - ./storage:/app/storage
-    depends_on:
-      postgres:
-        condition: service_healthy
-
-  postgres:
-    image: postgres:16-alpine
-    container_name: abr_greens_postgres
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgrespassword
-      POSTGRES_DB: abr_greens
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d abr_greens"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
-volumes:
-  pgdata:
