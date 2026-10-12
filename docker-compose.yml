@@ -20,6 +20,8 @@ services:
     restart: always
     expose:
       - "3000"
+    env_file:
+      - .env
     environment:
       PORT: 3000
       DATABASE_URL: ${DATABASE_URL:-postgresql://postgres:postgrespassword@host.docker.internal:5432/postgres}

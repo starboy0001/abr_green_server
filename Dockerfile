@@ -23,6 +23,9 @@ COPY storage/ ./storage/
 COPY schema.sql ./
 
 
+# Build TypeScript into dist
+RUN npm run build
+
 EXPOSE 3000
 
 ENV PORT=3000
@@ -31,5 +34,4 @@ ENV NODE_ENV=production
 HEALTHCHECK --interval=10s --timeout=5s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:3000/health || exit 1
 
-
-CMD ["npm", "start"]
+CMD ["node", "dist/server.js"]

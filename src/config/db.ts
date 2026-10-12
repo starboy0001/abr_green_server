@@ -9,14 +9,18 @@ let pool: Pool | null = null;
 let sqliteDb: any = null;
 
 function initSqlite(): void {
+  if (process.env.NODE_ENV === 'production') {
+    console.warn('⚠️  PostgreSQL connection failed in production mode.');
+    return;
+  }
   try {
     const Database = require('better-sqlite3');
-    const dbPath = path.join(__dirname, '..', '..', 'database.sqlite');
+    const dbPath = path.join(process.cwd(), 'database.sqlite');
     sqliteDb = new Database(dbPath);
     sqliteDb.pragma('journal_mode = WAL');
     console.log(`✓ High-performance local database active: ${dbPath}`);
-  } catch (err) {
-    console.error('Failed to initialize local database:', err);
+  } catch (err: any) {
+    console.error('Failed to initialize local database:', err.message);
   }
 }
 
@@ -33,11 +37,13 @@ export async function initDb(): Promise<void> {
         port: parseInt(process.env.DB_PORT || '5432', 10),
         user: process.env.DB_USER || 'postgres',
         password: process.env.DB_PASSWORD || 'postgrespassword',
-        database: process.env.DB_NAME || 'abr_greens',
+        database: process.env.DB_NAME || 'postgres',
         max: parseInt(process.env.DB_POOL_MAX || '30', 10),
         idleTimeoutMillis: 30000,
         connectionTimeoutMillis: 5000,
       };
+
+  console.log(`📡 Connecting to PostgreSQL at ${process.env.DATABASE_URL ? 'DATABASE_URL' : `${poolConfig.host}:${poolConfig.port}/${poolConfig.database}`}...`);
 
   const testPool = new Pool(poolConfig);
   try {
@@ -47,8 +53,12 @@ export async function initDb(): Promise<void> {
     console.log('✓ Successfully connected to PostgreSQL database pool!');
   } catch (err: any) {
     console.warn(`⚠️  Could not connect to PostgreSQL: ${err.message}`);
-    console.warn('⚡ Falling back to local development database for instant local testing.');
-    initSqlite();
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('⚡ Falling back to local development database for instant local testing.');
+      initSqlite();
+    } else {
+      console.error('❌ Failed to connect to PostgreSQL in production mode. Check your database credentials.');
+    }
   }
 }
 
