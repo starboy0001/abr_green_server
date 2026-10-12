@@ -1,0 +1,17 @@
+{
+  "apps": [
+    {
+      "name": "abr-greens-api",
+      "script": "src/server.ts",
+      "interpreter": "node_modules/.bin/tsx",
+      "instances": "max",
+      "exec_mode": "cluster",
+      "watch": false,
+      "max_memory_restart": "1G",
+      "env_production": {
+        "NODE_ENV": "production",
+        "PORT": 8000
+      }
+    }
+  ]
+}
