@@ -16,6 +16,7 @@ export const getProjects = async (_req: AuthRequest, res: Response): Promise<voi
           project_payment_plan: p.project_payment_plan,
           location_map: p.location_map,
           description: p.description,
+          short_description: p.short_description || 'Exclusive Township Plots & Luxury Living',
           status: p.status
         }))
       }
@@ -29,14 +30,34 @@ export const getProjects = async (_req: AuthRequest, res: Response): Promise<voi
 export const getHomeImages = async (_req: AuthRequest, res: Response): Promise<void> => {
   try {
     const images = await query<GalleryItem>("SELECT * FROM gallery_items WHERE type = 'image' LIMIT 5");
+    const imageList = images.length > 0 ? images.map(img => img.url) : [
+      'images/banner1.jpg',
+      'images/banner2.jpg',
+      'images/banner3.jpg'
+    ];
     res.status(200).json({
       success: true,
       data: {
-        images: images.map(img => img.url)
+        app_settings: {
+          dashboard_image_1: imageList[0] || 'images/banner1.jpg',
+          dashboard_image_2: imageList[1] || 'images/banner2.jpg',
+          dashboard_image_3: imageList[2] || 'images/banner3.jpg',
+        },
+        images: imageList
       }
     });
   } catch (error) {
-    res.status(200).json({ success: true, data: { images: [] } });
+    res.status(200).json({
+      success: true,
+      data: {
+        app_settings: {
+          dashboard_image_1: 'images/banner1.jpg',
+          dashboard_image_2: 'images/banner2.jpg',
+          dashboard_image_3: 'images/banner3.jpg',
+        },
+        images: []
+      }
+    });
   }
 };
 

@@ -19,7 +19,12 @@ export const openLuckyDraw = async (_req: AuthRequest, res: Response): Promise<v
           id: draw.id,
           title: draw.title,
           prize: draw.prize,
-          draw_date: draw.draw_date
+          draw_date: draw.draw_date,
+          image: 'images/luckydraw.jpg',
+          status: 'open',
+          flash_msg: 'Grand Township Mega Draw — Live on 15 Nov 2026!',
+          declare_on: 'Draw Date: 15 November 2026',
+          footnote: '* Exclusive for all active ABR Greens township members. Terms & conditions apply.'
         }
       }
     });
@@ -32,6 +37,28 @@ export const getLuckyDrawResults = async (_req: AuthRequest, res: Response): Pro
   res.status(200).json({
     success: true,
     data: {
+      status: 'other_than_declared',
+      drawTimer: 3600,
+      luckyDraws: [
+        {
+          name: 'Rajesh',
+          surname: 'Malhotra',
+          created_at: '2026-08-15 14:30:00',
+          dob: '1985-04-12',
+          ticket_no: 'ABR-LUCKY-7821',
+          customer_id: '1',
+          allotted_plot: 'Meadows #104'
+        },
+        {
+          name: 'Sunita',
+          surname: 'Mehra',
+          created_at: '2026-06-01 10:15:00',
+          dob: '1990-11-20',
+          ticket_no: 'ABR-LUCKY-3419',
+          customer_id: '2',
+          allotted_plot: 'Palm Heights #22'
+        }
+      ],
       results: [
         {
           draw_name: 'Monsoon Plot Booking Draw 2026',
@@ -39,13 +66,6 @@ export const getLuckyDrawResults = async (_req: AuthRequest, res: Response): Pro
           winner_plot: 'Meadows #104',
           prize: 'Royal Enfield Hunter 350',
           date: '2026-08-15'
-        },
-        {
-          draw_name: 'Early Bird Booking Draw 2026',
-          winner_name: 'Sunita Mehra',
-          winner_plot: 'Palm Heights #22',
-          prize: '50g Gold Coin',
-          date: '2026-06-01'
         }
       ]
     }
@@ -55,9 +75,6 @@ export const getLuckyDrawResults = async (_req: AuthRequest, res: Response): Pro
 export const isCustomerWon = async (_req: AuthRequest, res: Response): Promise<void> => {
   res.status(200).json({
     success: true,
-    data: {
-      won: false,
-      message: 'You have entered the upcoming Mega Draw. Results will be announced on live stream!'
-    }
+    data: ['Rajesh Malhotra (Meadows #104)']
   });
 };

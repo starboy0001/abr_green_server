@@ -31,6 +31,7 @@ export interface Project {
   project_payment_plan: string;
   location_map: string;
   description: string;
+  short_description?: string;
   status: string;
   created_at?: Date;
 }
