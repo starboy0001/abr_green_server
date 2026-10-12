@@ -43,7 +43,7 @@ sudo npm install -g pm2 rimraf typescript
 
 # 7. Configure Environment
 cat <<EOF > .env
-PORT=8000
+PORT=3000
 DATABASE_URL=postgresql://${DB_USER}:${DB_PASS}@localhost:5432/${DB_NAME}
 DB_HOST=localhost
 DB_PORT=5432
@@ -67,7 +67,7 @@ sudo env PATH=$PATH:/usr/bin pm2 startup systemd -u $USER --hp $HOME
 
 echo "=========================================================="
 echo "✅ DEPLOYMENT COMPLETE!"
-echo "Server is running on port 8000"
+echo "Server is running on port 3000"
 echo "Check status: pm2 status"
 echo "Check logs:   pm2 logs"
 echo "=========================================================="

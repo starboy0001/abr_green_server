@@ -9,7 +9,7 @@ import apiRouter from './routes/api';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 3000;
 
 // High performance middlewares
 app.use(cors({ origin: '*' }));

@@ -70,7 +70,7 @@ docker compose logs -f
 # Check container status:
 docker compose ps
 ```
-The Docker setup automatically runs `schema.sql`, configures connection pooling, and exposes the REST API on port `8000`.
+The Docker setup automatically runs `schema.sql`, configures connection pooling, and exposes the REST API on port `3000`.
 
 ---
 
@@ -114,7 +114,7 @@ PGPASSWORD='YourSecurePasswordHere' psql -h localhost -U abr_user -d abr_greens 
 ### 4. Configure Environment
 Edit `.env`:
 ```env
-PORT=8000
+PORT=3000
 DATABASE_URL=postgresql://abr_user:YourSecurePasswordHere@localhost:5432/abr_greens
 DB_HOST=localhost
 DB_PORT=5432
@@ -152,11 +152,11 @@ In [lib/res/app_urls.dart](file:///Users/macbook/Downloads/abr_v1.1.0/lib/res/ap
 ```dart
 class AppUrl {
   // Replace with your EC2 Public IP or Domain:
-  static var baseUrl = 'http://YOUR_EC2_PUBLIC_IP:8000/api/';
-  static var imageBaseUrl = 'http://YOUR_EC2_PUBLIC_IP:8000/storage/';
+  static var baseUrl = 'http://YOUR_EC2_PUBLIC_IP:3000/api/';
+  static var imageBaseUrl = 'http://YOUR_EC2_PUBLIC_IP:3000/storage/';
   
   // For local Android Emulator testing:
-  // static var baseUrl = 'http://10.0.2.2:8000/api/';
-  // static var imageBaseUrl = 'http://10.0.2.2:8000/storage/';
+  // static var baseUrl = 'http://10.0.2.2:3000/api/';
+  // static var imageBaseUrl = 'http://10.0.2.2:3000/storage/';
 }
 ```
